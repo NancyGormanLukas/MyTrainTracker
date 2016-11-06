@@ -1,0 +1,49 @@
+/*sets page width to 90% and centered*/
+.page-wrapper{
+	width: 90%;
+	margin: 0 auto;
+}
+
+/*begin interchangeable variables*/
+.bottom-margin{
+	margin-bottom: 20px;
+}
+
+.hide{
+	display: none;
+}
+
+.show{
+	display: block;
+}
+
+.white{
+	color: orange !important;
+}
+/*end interchangeable variables*/
+
+/*styling for jumbotron header*/
+.jumbotron{
+	background-image: url("../images/train.gif");
+	background-size: cover;
+	background-position: 50% 50%;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+/*begin overrides for bootstrap*/
+.btn-default{
+	background-color: #000000;
+	border-color: #000000;
+	color: #ffffff;
+}
+
+.panel-default>.panel-heading{
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.panel-default{
+	border-color: #000000;
+}
+/*end overrides for bootstrap*/

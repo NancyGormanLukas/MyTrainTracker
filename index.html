@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Train Schedule</title>
+
+	<!-- Bootstrap CDN-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+	<!-- Link to Moment.js -->
+	<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+	<!-- Firebase Reference -->
+	<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+
+<body>
+
+<!-- Begin Entire Page Wrapper -->
+	<div class="page-wrapper">
+		
+		<!-- Jumbotron Title -->
+		<div class="jumbotron">
+			<h2 class="text-center white">Track Your Go-To Trains</h2>
+			<h3 class="text-center white">So You Never Miss Your Train Again!</h3>
+		</div>
+
+	  <!-- Modal for editing added trains -->
+	  <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content inputs populated from script.js-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Edit Train</h4>
+	        </div>
+	        <div class="modal-body">
+	          <form>
+							<div class="form-group">
+								<label for="modName">Train Name</label>
+								<input type="text" class="form-control" id="modName">
+							</div>
+							<div class="form-group">
+								<label for="modDestination">Destination</label>
+								<input type="text" class="form-control" id="modDestination">
+							</div>
+							<div class="form-group">
+								<label for="start">First Train Time (HH:MM - military time)</label>
+								<input type="text" class="form-control" id="modStart">
+							</div>
+							<div class="form-group">
+								<label for="modFrequency">Frequency (in minutes)</label>
+								<input type="number" class="form-control" id="modFrequency">
+							</div>
+							<input id="submitMod" type="submit" class="btn btn-default">
+						</form>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+	  </div>
+
+		<!-- login/signup dropdown button -->
+		<div class="btn-group bottom-margin">
+		  <button id="login-button" type="button" class="btn btn-default dropdown-toggle show" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Login <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu">
+		    <li><a href="#" class="loginBtn">Log In</a></li>
+		    <li role="separator" class="divider"></li>
+		    <li><a href="#" class="signBtn">Sign Up</a></li>
+		  </ul>
+		  <!-- Logout Button initially hidden -->
+		  <button id="logout-button" type="button" class="btn btn-default hide">Log Out</button>
+		</div>
+
+		<!-- Sign Up Panel initially hidden-->
+		<div id="signUp" class="row hide">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Sign Up</h3>
+					</div>
+					<div class="panel-body">
+						<form>
+							<div class="form-group">
+								<label for="signEmail">Email Address</label>
+								<input type="text" class="form-control" id="signEmail">
+							</div>
+							<div class="form-group">
+								<label for="signPass">Choose a Password</label>
+								<input type="password" class="form-control" id="signPass">
+							</div>
+							<input id="signSubmit" type="submit" class="btn btn-default">
+						</form>
+					</div>
+				</div>
+			</div>	
+		</div>
+
+		<!-- Login Panel initially hidden-->
+		<div id="login" class="row hide">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Log In</h3>
+					</div>
+					<div class="panel-body">
+						<form>
+							<div class="form-group">
+								<label for="loginEmail">Email Address</label>
+								<input type="text" class="form-control" id="loginEmail">
+							</div>
+							<div class="form-group">
+								<label for="loginPass">Password</label>
+								<input type="password" class="form-control" id="loginPass">
+							</div>
+							<input id="loginSubmit" type="submit" class="btn btn-default">
+						</form>
+					</div>
+				</div>
+			</div>	
+		</div>
+
+		<!-- Train Times Panel continuously updated from script.js-->
+		<div class="panel panel-default">
+		  <div class="panel-heading">Current Train Schedule</div>
+		  <div class="panel-body">
+		    <table id="trainData" class="table">
+		    	<thead>
+		    		<tr>
+		    			<th>Train Name</th>
+		    			<th>Destination</th>
+		    			<th>Frequency (in minutes)</th>
+		    			<th>Next Arrival</th>
+		    			<th>Minutes Away</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<!-- train data is inserted here -->
+		    	</tbody>
+			</table>
+		  </div>
+		</div>
+
+		<!-- Add New Train to Train Times Panel -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Add A Train</h3>
+					</div>
+					<div class="panel-body">
+						<form>
+							<div class="form-group">
+								<label for="trainName">Train's Name</label>
+								<input type="text" class="form-control" id="trainName">
+							</div>
+							<div class="form-group">
+								<label for="destination">Destination</label>
+								<input type="text" class="form-control" id="destination">
+							</div>
+							<div class="form-group">
+								<label for="start">First Train Time (HH:MM - military time)</label>
+								<input type="text" class="form-control" id="start">
+							</div>
+							<div class="form-group">
+								<label for="frequency">Frequency (in minutes)</label>
+								<input type="number" class="form-control" id="frequency">
+							</div>
+							<input id="submitTrain" type="submit" class="btn btn-default">
+						</form>
+					</div>
+				</div>
+			</div>	
+		</div>
+
+	</div>
+	<!-- End Entire Page Wrapper -->
+
+	<!-- added link to js file -->
+	<script type="text/javascript" src="assets/javascript/script.js"></script>
+
+</body>
+
+</html>
